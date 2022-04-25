@@ -12,16 +12,17 @@ function Set-Directory {
     if ([string]::IsNullOrEmpty($TargetPath)) {
         Write-Error -Message '$env:OLDPWD not set' -ErrorAction Stop
     } else {
-        $env:OLDPWD = $(Get-Location).Path
-        Set-Location $TargetPath
+        $OLDPWD = $(Get-Location).Path
+        Set-Location $TargetPath -ErrorAction Stop
+        $env:OLDPWD = $OLDPWD
     }
     if ($Path -eq '-') {
         Write-Output $TargetPath
     }
 }
 
-while (Test-Path Alias:cd) {
-    Remove-Item Alias:cd
+while (Test-Path Alias:\cd) {
+    Remove-Item Alias:\cd
 }
 
 Set-Alias -Name cd -Value Set-Directory
